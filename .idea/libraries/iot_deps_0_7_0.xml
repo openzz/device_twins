@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="iot-deps-0.7.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/iot-deps-0.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
