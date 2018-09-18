@@ -1,3 +1,4 @@
+import com.microsoft.azure.sdk.iot.service.RegistryManager;
 import com.microsoft.azure.sdk.iot.service.devicetwin.*;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 
@@ -5,12 +6,15 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.microsoft.azure.sdk.iot.service.devicetwin.QueryType.TWIN;
+
 public class Main {
     public static final String iotHubConnectionString = "HostName=AHHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=8QtU/exf530prz6wvK9AUbTDonWAzA68CdOS1y2k3l4=";
     public static final String deviceId = "MKR1000";
 
     public static final String region = "US";
     public static final String plant = "Redmond43";
+
 
     public static void main( String[] args ) throws IOException{
         // Get the DeviceTwin and DeviceTwinDevice objects
@@ -23,6 +27,19 @@ public class Main {
             System.out.println("Device twin before update:");
             twinClient.getTwin(device);
             System.out.println(device);
+
+            SqlQuery myQuery = SqlQuery.createSqlQuery("*", SqlQuery.FromType.DEVICES, "connectionState='Connected'", null);
+
+            Query twinQuery = twinClient.queryTwin(myQuery.getQuery(), 100);
+            System.out.println("CONNECTED DEVICES START");
+            while(twinClient.hasNextDeviceTwin(twinQuery)){
+                DeviceTwinDevice d = twinClient.getNextDeviceTwin(twinQuery);
+                System.out.println(d.getDeviceId());
+            }
+            System.out.println("CONNECTED DEVICES END");
+            System.out.println();
+
+            //String conn = new Query("SELECT * FROM devices", 100, MyQuery);
 
             // Update device twin tags if they are different
             // from the existing values
@@ -51,14 +68,14 @@ public class Main {
 
             // Construct the query
             SqlQuery sqlQuery = SqlQuery.createSqlQuery("*", SqlQuery.FromType.DEVICES, "tags.plant='Redmond43'", null);
-
+/*
             // Run the query, returning a maximum of 100 devices
             Query twinQuery = twinClient.queryTwin(sqlQuery.getQuery(), 100);
             while (twinClient.hasNextDeviceTwin(twinQuery)) {
                 DeviceTwinDevice d = twinClient.getNextDeviceTwin(twinQuery);
                 System.out.println(d.getDeviceId());
             }
-
+*/
             System.out.println("Devices in Redmond using a cellular network:");
 
             // Construct the query
